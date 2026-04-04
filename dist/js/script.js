@@ -134,7 +134,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     function showModalByScroll() {
         if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight) {
-        opemModal();
+        openModal();
         window.removeEventListener('scroll', showModalByScroll);
         }
     }
@@ -164,7 +164,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     this.element = 'menu__item';
                     element.classList.add(this.element);
                 } else {
-                    this.classes.forEach(className => element.classList.ass(className));  
+                    this.classes.forEach(className => element.classList.add(className));  
                 }
                 
                 element.innerHTML=`
@@ -206,5 +206,35 @@ window.addEventListener('DOMContentLoaded', function() {
             21,
             '.menu__field .container',
         ).render();
+
+    
+   const formElement = document.querySelector('.modal__content form');
+formElement.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(formElement);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    
+    // Отправка на сервер
+    fetch('https://simple-server-cumz.onrender.com/api/data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: jsonData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Успех:', data);
+        alert('Форма отправлена!');
+        formElement.reset(); // очистить форму
+        closeModal(); // закрыть модалку
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Ошибка отправки. Попробуйте позже.');
     });
+});
+});
+
+
  
